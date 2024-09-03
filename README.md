@@ -1,50 +1,56 @@
-# React + TypeScript + Vite
+# Messaging App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a modern messaging app built with cutting-edge web technologies, offering real-time chat functionality and seamless performance. The app is developed using **React**, **TypeScript**, **GraphQL**, and **Apollo Client**, with code generation for improved developer experience.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** - A powerful and flexible JavaScript library for building user interfaces.
+- **TypeScript** - Typed JavaScript for safer and scalable code.
+- **Vite** - A fast development environment with Hot Module Replacement (HMR).
+- **GraphQL** - A query language for your API, providing a more efficient, powerful, and flexible alternative to REST.
+- **Apollo Client** - A state management library for JavaScript that enables you to interact with your GraphQL API.
+- **Codegen** - Automatically generates TypeScript types and hooks based on your GraphQL schema.
+- **ESLint** - Linting utility for enforcing consistent code style and catching errors.
+- **Prettier** - Code formatting for better readability and maintenance.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Prerequisites
 
-- Configure the top-level `parserOptions` property like this:
+Ensure you have the following installed:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **Node.js** (>= 16.x)
+- **npm** (>= 7.x)
+
+### Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/messaging-app.git
+cd messaging-app
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3.  .env file
 
 ```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+VITE_API_URL=
+```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+3. Generate GraphQL types and hooks:
+
+```bash
+npm run codegen
+```
+
+4. Start the development server:
+
+```bash
+npm run dev
 ```
