@@ -54,3 +54,7 @@ npm run codegen
 ```bash
 npm run dev
 ```
+
+### Backend Repo
+
+[BACKEND](https://github.com/adityamandal-Developer/messaging-api-graphql)
