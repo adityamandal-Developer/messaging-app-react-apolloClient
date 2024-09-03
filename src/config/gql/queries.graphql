@@ -1,0 +1,32 @@
+# createUser
+mutation CreateUser($createUserInput: CreateUserInput!) {
+  createUser(createUserInput: $createUserInput) {
+    _id
+    email
+    name
+  }
+}
+# update user
+mutation UpdateUser($updateUserInput: UpdateUserInput!) {
+  updateUser(updateUserInput: $updateUserInput) {
+    _id
+    email
+  }
+}
+# Query users
+query Users {
+  users {
+    _id
+    email
+    name
+  }
+}
+
+# Query User
+query User($id: String!) {
+  user(_id: $id) {
+    _id
+    email
+    name
+  }
+}
