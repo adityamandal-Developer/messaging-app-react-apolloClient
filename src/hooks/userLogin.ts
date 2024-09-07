@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { API_URL } from "../constants/urls";
-import client from "../constants/apollo-client";
+import client from "../config/apollo-client";
 interface LoginRequest {
   email: string;
   password: string;
@@ -14,6 +14,7 @@ const useLogin = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(request),
     });
     if (!res.ok) {
