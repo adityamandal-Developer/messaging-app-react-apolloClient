@@ -51,6 +51,7 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: "Query";
+  me: User;
   user: User;
   users: Array<User>;
 };
@@ -121,10 +122,18 @@ export type UserQuery = {
   };
 };
 
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
+
+export type MeQuery = {
+  __typename?: "Query";
+  me: { __typename?: "User"; _id: string; email: string; name?: string | null };
+};
+
 export const namedOperations = {
   Query: {
     Users: "Users",
     User: "User",
+    Me: "Me",
   },
   Mutation: {
     CreateUser: "CreateUser",
@@ -314,3 +323,30 @@ export const UserDocument = {
     },
   ],
 } as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const MeDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Me" },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "me" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "_id" } },
+                { kind: "Field", name: { kind: "Name", value: "email" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<MeQuery, MeQueryVariables>;

@@ -30,3 +30,12 @@ query User($id: String!) {
     name
   }
 }
+
+#get me
+query Me {
+  me {
+    _id
+    email
+    name
+  }
+}
