@@ -1,7 +1,5 @@
-import React from "react";
-
 const Home = () => {
-  return <div>Home</div>;
+  return <main className="bg-white h-screen text-black">hello</main>;
 };
 
 export default Home;

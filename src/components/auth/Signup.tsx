@@ -5,10 +5,12 @@ import { CreateUserDocument } from "../../config/gql/generated";
 import { useMutation } from "@apollo/client";
 import { extractErrorMessage } from "../../hooks/errors";
 import { useState } from "react";
+import { useLogin } from "../../hooks/userLogin";
 
 const Signup = () => {
   const [CreateUser] = useMutation(CreateUserDocument);
   const [error, setError] = useState<string>();
+  const { login } = useLogin();
   return (
     <Auth
       submitLabel="Signup"
@@ -23,6 +25,7 @@ const Signup = () => {
               },
             },
           });
+          login({ email, password });
           setError("");
         } catch (error: any) {
           const errorMessage = extractErrorMessage(error);
