@@ -1,4 +1,4 @@
-# Messaging App
+# Messaging App using Nestjs, GraphQL, React, Apollo Client, codegen
 
 This is a modern messaging app built with cutting-edge web technologies, offering real-time chat functionality and seamless performance. The app is developed using **React**, **TypeScript**, **GraphQL**, and **Apollo Client**, with code generation for improved developer experience.
 
