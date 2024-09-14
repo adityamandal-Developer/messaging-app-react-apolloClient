@@ -8,8 +8,25 @@ import NavLinks from "./NavLinks";
 import UserSettings from "./UserSettings";
 import { useReactiveVar } from "@apollo/client";
 import { authenticatedVar } from "../../config/authenticated";
+import { Page } from "../../interfaces/page.interfaces";
 
-const pages: string[] = ["Home"];
+const pages: Page[] = [
+  {
+    title: "Home",
+    path: "/home",
+  },
+];
+
+const unAuthPages: Page[] = [
+  {
+    title: "Login",
+    path: "/login",
+  },
+  {
+    title: "SignUp",
+    path: "/signup",
+  },
+];
 
 function Header() {
   const authenticated = useReactiveVar(authenticatedVar);
@@ -19,9 +36,9 @@ function Header() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Icon />
-          <MobileNav pages={pages} />
+          <MobileNav pages={authenticated ? pages : unAuthPages} />
           <MobileIcon />
-          <NavLinks pages={pages} />
+          <NavLinks pages={authenticated ? pages : unAuthPages} />
           {authenticated && <UserSettings />}
         </Toolbar>
       </Container>

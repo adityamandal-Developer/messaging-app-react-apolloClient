@@ -1,6 +1,8 @@
 import { useState } from "react";
 import client from "../config/apollo-client";
 import { API_URL } from "../constants/urls";
+import { snackVar } from "../utils/snack";
+import { SUCCESS_LOGOUT__SNACK_MESSAGE } from "../constants/success";
 
 const useLogout = () => {
   const [error, setError] = useState<string>();
@@ -14,6 +16,7 @@ const useLogout = () => {
       return;
     }
     setError("");
+    snackVar(SUCCESS_LOGOUT__SNACK_MESSAGE);
     await client.refetchQueries({ include: "active" });
   };
   return { logout, error };

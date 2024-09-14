@@ -1,9 +1,11 @@
 import { Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import React, { useState } from "react";
+import { Page } from "../../../interfaces/page.interfaces";
+import router from "../../Routes";
 
 interface IProps {
-  pages: string[];
+  pages: Page[];
 }
 const MobileNav = ({ pages }: IProps) => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -45,8 +47,14 @@ const MobileNav = ({ pages }: IProps) => {
         sx={{ display: { xs: "block", md: "none" } }}
       >
         {pages.map((page) => (
-          <MenuItem key={page} onClick={handleCloseNavMenu}>
-            <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+          <MenuItem
+            key={page.title}
+            onClick={() => {
+              router.navigate(page.path);
+              handleCloseNavMenu();
+            }}
+          >
+            <Typography sx={{ textAlign: "center" }}>{page.title}</Typography>
           </MenuItem>
         ))}
       </Menu>

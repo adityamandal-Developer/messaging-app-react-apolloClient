@@ -8,6 +8,10 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { useLogout } from "../../hooks/userLogout";
 import { onLogout } from "../../utils/logout";
+import { snackVar } from "../../utils/snack";
+import { UNKNOWN_ERROR_SNACK_MESSAGE } from "../../constants/errors";
+import { SUCCESS_LOGOUT__SNACK_MESSAGE } from "../../constants/success";
+import { GraphQLError, GraphQLErrorOptions } from "graphql";
 
 const settings = ["Logout"];
 const UserSettings = () => {
@@ -50,8 +54,15 @@ const UserSettings = () => {
           <Typography
             sx={{ textAlign: "center" }}
             onClick={async () => {
-              await logout();
-              onLogout();
+              try {
+                await logout();
+                onLogout();
+                snackVar(SUCCESS_LOGOUT__SNACK_MESSAGE);
+              } catch (error) {
+                if ((error as any).message === "Unauthorized") {
+                  return;
+                } else snackVar(UNKNOWN_ERROR_SNACK_MESSAGE);
+              }
             }}
           >
             Logout

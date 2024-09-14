@@ -13,7 +13,7 @@ interface AuthProps {
 const Auth = ({ submitLabel, onSubmit, children, error }: AuthProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const data = useGetMe();
+  const { data } = useGetMe();
   const navigate = useNavigate();
 
   useEffect(() => {
