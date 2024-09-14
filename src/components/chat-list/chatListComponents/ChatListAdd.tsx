@@ -1,4 +1,3 @@
-import { useMutation } from "@apollo/client";
 import Search from "@mui/icons-material/Search";
 import {
   Box,
@@ -15,7 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { CreateChatDocument } from "../../../config/gql/generated";
+import { UNKNOWN_ERROR_MESSSAGE } from "../../../constants/errors";
+import { useCreateChat } from "../../../hooks/useCreateChat";
 
 interface CHAT_LIST_PROPS {
   open: boolean;
@@ -24,11 +24,18 @@ interface CHAT_LIST_PROPS {
 
 const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [name, setName] = useState<string | undefined>();
-  const [createChat] = useMutation(CreateChatDocument);
+  const [name, setName] = useState<string>("");
+  const [error, setError] = useState("");
+  const [createChat] = useCreateChat();
 
+  const onClose = () => {
+    setError("");
+    setName("");
+    setIsPrivate(false);
+    handleClose();
+  };
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={onClose}>
       <Box
         sx={{
           position: "absolute",
@@ -50,7 +57,7 @@ const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
               style={{ width: 0 }}
               control={
                 <Switch
-                  defaultChecked
+                  defaultChecked={isPrivate}
                   value={isPrivate}
                   onChange={(e) => setIsPrivate(e?.target.checked)}
                 />
@@ -66,17 +73,33 @@ const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
               </IconButton>
             </Paper>
           ) : (
-            <TextField label="Name" onChange={(e) => setName(e.target.value)} />
+            <TextField
+              label="Name"
+              required
+              error={!!error}
+              helperText={error}
+              onChange={(e) => setName(e.target.value)}
+            />
           )}
           <Button
             variant="outlined"
-            onClick={() =>
-              createChat({
-                variables: {
-                  createChatInput: { isPrivate, name: name || undefined },
-                },
-              })
-            }
+            onClick={async () => {
+              if (!name.length) {
+                setError("Chat name is required");
+                return;
+              }
+
+              try {
+                await createChat({
+                  variables: {
+                    createChatInput: { isPrivate, name: name || undefined },
+                  },
+                });
+                onClose();
+              } catch (error) {
+                setError(UNKNOWN_ERROR_MESSSAGE);
+              }
+            }}
           >
             Save
           </Button>
