@@ -39,3 +39,16 @@ query Me {
     name
   }
 }
+
+#CHATS
+
+#Create Chat
+mutation CreateChat($createChatInput: CreateChatInput!) {
+  createChat(createChatInput: $createChatInput) {
+    _id
+    isPrivate
+    name
+    userId
+    userIds
+  }
+}

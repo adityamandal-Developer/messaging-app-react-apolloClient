@@ -1,5 +1,5 @@
 const Home = () => {
-  return <main className="bg-white h-screen text-black">hello</main>;
+  return <main className="h-screen text-7xl font-bold">hello</main>;
 };
 
 export default Home;

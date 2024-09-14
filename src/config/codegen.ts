@@ -9,7 +9,7 @@ const plugins = [
 
 const config: CodegenConfig = {
   overwrite: true,
-  //   watch: true,
+  watch: true,
   schema: "http://localhost:3000/graphql",
   generates: {
     "./src/config/gql/generated.tsx": {

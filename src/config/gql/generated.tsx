@@ -28,6 +28,21 @@ export type Scalars = {
   Float: { input: number; output: number };
 };
 
+export type Chat = {
+  __typename?: "Chat";
+  _id: Scalars["ID"]["output"];
+  isPrivate: Scalars["Boolean"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  userId: Scalars["String"]["output"];
+  userIds: Array<Scalars["String"]["output"]>;
+};
+
+export type CreateChatInput = {
+  isPrivate: Scalars["Boolean"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  userIds?: InputMaybe<Array<Scalars["String"]["input"]>>;
+};
+
 export type CreateUserInput = {
   email: Scalars["String"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
@@ -36,13 +51,28 @@ export type CreateUserInput = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  createChat: Chat;
   createUser: User;
+  removeChat: Chat;
   removeUser: User;
+  updateChat: Chat;
   updateUser: User;
+};
+
+export type MutationCreateChatArgs = {
+  createChatInput: CreateChatInput;
 };
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput;
+};
+
+export type MutationRemoveChatArgs = {
+  id: Scalars["Int"]["input"];
+};
+
+export type MutationUpdateChatArgs = {
+  updateChatInput: UpdateChatInput;
 };
 
 export type MutationUpdateUserArgs = {
@@ -51,13 +81,26 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: "Query";
+  chat: Chat;
+  chats: Array<Chat>;
   me: User;
   user: User;
   users: Array<User>;
 };
 
+export type QueryChatArgs = {
+  id: Scalars["Int"]["input"];
+};
+
 export type QueryUserArgs = {
   _id: Scalars["String"]["input"];
+};
+
+export type UpdateChatInput = {
+  id: Scalars["Int"]["input"];
+  isPrivate?: InputMaybe<Scalars["Boolean"]["input"]>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  userIds?: InputMaybe<Array<Scalars["String"]["input"]>>;
 };
 
 export type UpdateUserInput = {
@@ -129,6 +172,22 @@ export type MeQuery = {
   me: { __typename?: "User"; _id: string; email: string; name?: string | null };
 };
 
+export type CreateChatMutationVariables = Exact<{
+  createChatInput: CreateChatInput;
+}>;
+
+export type CreateChatMutation = {
+  __typename?: "Mutation";
+  createChat: {
+    __typename?: "Chat";
+    _id: string;
+    isPrivate: boolean;
+    name?: string | null;
+    userId: string;
+    userIds: Array<string>;
+  };
+};
+
 export const namedOperations = {
   Query: {
     Users: "Users",
@@ -138,6 +197,7 @@ export const namedOperations = {
   Mutation: {
     CreateUser: "CreateUser",
     UpdateUser: "UpdateUser",
+    CreateChat: "CreateChat",
   },
 };
 
@@ -350,3 +410,58 @@ export const MeDocument = {
     },
   ],
 } as unknown as DocumentNode<MeQuery, MeQueryVariables>;
+export const CreateChatDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "CreateChat" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "createChatInput" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateChatInput" },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "createChat" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "createChatInput" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "createChatInput" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "_id" } },
+                { kind: "Field", name: { kind: "Name", value: "isPrivate" } },
+                { kind: "Field", name: { kind: "Name", value: "name" } },
+                { kind: "Field", name: { kind: "Name", value: "userId" } },
+                { kind: "Field", name: { kind: "Name", value: "userIds" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateChatMutation, CreateChatMutationVariables>;
