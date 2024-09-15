@@ -1,7 +1,6 @@
 import {
   Container,
   CssBaseline,
-  Grid2,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -14,39 +13,32 @@ import Header from "./components/header/Header";
 import Snackbar from "./components/snackbar/Snackbar";
 import ChatList from "./components/chat-list/ChatList";
 import { usePath } from "./hooks/usePath";
+import Grid from "@mui/material/Grid2";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
-    },
-  },
 });
 
 const App = () => {
   const { path } = usePath();
+  const showChatList = path === "/" || path.startsWith("/chats/");
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Header />
         <Guard>
-          {path == "/" ? (
-            <Grid2 container>
-              <Grid2 columns={3}>
+          {showChatList ? (
+            <Grid container>
+              <Grid size={{ md: 3 }}>
                 <ChatList />
-              </Grid2>
-              <Grid2 columns={9}>
+              </Grid>
+              <Grid size={{ md: 9 }}>
                 <Routes />
-              </Grid2>
-            </Grid2>
+              </Grid>
+            </Grid>
           ) : (
             <Routes />
           )}
@@ -59,7 +51,7 @@ const App = () => {
 
 const Routes = () => {
   return (
-    <Container maxWidth={false} disableGutters>
+    <Container sx={{ height: "100%" }}>
       <RouterProvider router={router} />
     </Container>
   );

@@ -25,7 +25,7 @@ export default function ChatList() {
             width: "100%",
             maxWidth: 360,
             bgcolor: "background.paper",
-            maxHeight: "90vh",
+            maxHeight: "80vh",
             overflow: "auto",
           }}
         >

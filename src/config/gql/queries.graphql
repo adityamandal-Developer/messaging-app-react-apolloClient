@@ -63,3 +63,14 @@ query Chats {
     userIds
   }
 }
+
+#get single chat
+query Chat($_id: String!) {
+  chat(_id: $_id) {
+    _id
+    isPrivate
+    name
+    userId
+    userIds
+  }
+}
