@@ -9,13 +9,16 @@ import { Chat } from "../../../config/gql/generated";
 
 interface CHAT_PROP {
   chat: Chat;
+  selected: boolean;
 }
-const ChatListItem = ({ chat }: CHAT_PROP) => {
-  console.log(chat);
+const ChatListItem = ({ chat, selected }: CHAT_PROP) => {
   return (
     <>
       <ListItem alignItems="flex-start" disablePadding>
-        <ListItemButton onClick={() => router.navigate(`/chats/${chat._id}`)}>
+        <ListItemButton
+          onClick={() => router.navigate(`/chats/${chat._id}`)}
+          selected={selected}
+        >
           <ListItemAvatar>
             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
           </ListItemAvatar>
@@ -28,7 +31,7 @@ const ChatListItem = ({ chat }: CHAT_PROP) => {
                   variant="body2"
                   sx={{ color: "text.primary", display: "inline" }}
                 >
-                  Ali Connors
+                  Jhon Doe
                 </Typography>
                 {" — I'll be in your neighborhood doing errands this…"}
               </>

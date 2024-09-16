@@ -74,3 +74,23 @@ query Chat($_id: String!) {
     userIds
   }
 }
+
+#Send Message
+mutation CreateMessage($createMessageinput: CreateMessageInput!) {
+  createMessage(createMessageinput: $createMessageinput) {
+    _id
+    content
+    createdAt
+    userId
+  }
+}
+
+#get message
+query Messages($chatId: String!) {
+  messages(chatId: $chatId) {
+    _id
+    content
+    createdAt
+    userId
+  }
+}
