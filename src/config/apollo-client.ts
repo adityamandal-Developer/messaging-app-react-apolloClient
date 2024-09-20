@@ -31,11 +31,11 @@ const httpLink = new HttpLink({
 const wsLink = new GraphQLWsLink(
   createClient({
     url: `ws://${WS_URL}/graphql`,
-    connectionParams: () => {
-      return {
-        cookie: document.cookie, // Pass cookies here
-      };
-    },
+    // connectionParams: () => {
+    //   return {
+    //     cookie: document.cookie, // Pass cookies here
+    //   };
+    // },
   })
 );
 

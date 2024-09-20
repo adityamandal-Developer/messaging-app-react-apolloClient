@@ -1,7 +1,9 @@
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery, useSubscription } from "@apollo/client";
 import { useLocation, useParams } from "react-router-dom";
 import {
   ChatDocument,
+  Message,
   MessageCreatedDocument,
   MessagesDocument,
 } from "../../config/gql/generated";
@@ -14,7 +16,6 @@ import {
   Stack,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { useEffect, useRef, useState } from "react";
 import { useCreateMessage } from "../../hooks/useCreateMessage";
 import { useGetMe } from "../../hooks/useGetMe";
 import OtherPersonMessage from "./OtherPersonMessage";
@@ -23,17 +24,11 @@ import MyMessage from "./MyMessage";
 const Chat = () => {
   const { _id } = useParams<{ _id: string }>();
   const [message, setMessage] = useState("");
+  const [currentMessage, setCurrentMessage] = useState<Message[]>([]);
   const divRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
-  const { data: latestMessage } = useSubscription(MessageCreatedDocument, {
-    variables: { chatId: _id! },
-  });
-  console.log(latestMessage);
-  const scrollToBottom = () => divRef.current?.scrollIntoView();
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [location, message]);
+  const scrollToBottom = () => divRef.current?.scrollIntoView();
 
   const { data, loading, error } = useQuery(ChatDocument, {
     variables: { _id: _id! },
@@ -41,7 +36,29 @@ const Chat = () => {
   const { data: messageData } = useQuery(MessagesDocument, {
     variables: { chatId: _id! },
   });
+  const { data: latestMessage } = useSubscription(MessageCreatedDocument, {
+    variables: { chatId: _id! },
+  });
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [location, message, currentMessage]);
+
+  useEffect(() => {
+    if (messageData) {
+      setCurrentMessage(messageData.messages);
+    }
+  }, [messageData]);
+
+  useEffect(() => {
+    if (
+      latestMessage?.messageCreated &&
+      latestMessage.messageCreated._id !==
+        messageData?.messages[messageData?.messages.length - 1]._id
+    ) {
+      setCurrentMessage((prev) => [...prev, latestMessage.messageCreated]);
+    }
+  }, [latestMessage, messageData]);
   const { data: user } = useGetMe();
 
   const handleCreateMessage = async () => {
@@ -55,7 +72,9 @@ const Chat = () => {
   };
 
   const createMessage = useCreateMessage(_id!);
-  console.log(loading);
+  console.log(messageData);
+  console.log(currentMessage);
+  console.log(latestMessage);
   return (
     <Stack
       sx={{
@@ -77,21 +96,20 @@ const Chat = () => {
           msOverflowStyle: "none",
         }}
       >
-        {messageData?.messages.map((message) => (
-          <>
-            {message.userId !== user?.me._id ? (
-              <OtherPersonMessage
-                message={{ ...message, chatId: _id! }}
-                key={message._id}
-              />
-            ) : (
-              <MyMessage
-                message={{ ...message, chatId: _id! }}
-                key={message._id}
-              />
-            )}
-          </>
-        ))}
+        {[...(currentMessage || [])]
+          ?.sort(
+            (a, b) =>
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          )
+          .map((message) => (
+            <React.Fragment key={message._id}>
+              {message.userId !== user?.me._id ? (
+                <OtherPersonMessage message={message} key={message._id} />
+              ) : (
+                <MyMessage message={message} key={message._id} />
+              )}
+            </React.Fragment>
+          ))}
         <div ref={divRef}></div>
       </Box>
       <Paper

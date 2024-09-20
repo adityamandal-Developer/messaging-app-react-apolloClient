@@ -93,6 +93,7 @@ query Messages($chatId: String!) {
     content
     createdAt
     userId
+    chatId
   }
 }
 
