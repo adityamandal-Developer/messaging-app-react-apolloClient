@@ -6,7 +6,7 @@ interface IPROPS {
 }
 const OtherPersonMessage = ({ message }: IPROPS) => {
   return (
-    <div key={message._id} className="chat chat-start">
+    <div key={message!._id} className="chat chat-start">
       <div className="chat-image avatar">
         <div className="w-10 rounded-full">
           <img
@@ -18,10 +18,10 @@ const OtherPersonMessage = ({ message }: IPROPS) => {
       <div className="chat-header">
         Obi-Wan Kenobi
         <time className="text-xs opacity-50 ml-2">
-          {convertDate(message.createdAt)}
+          {convertDate(message!.createdAt)}
         </time>
       </div>
-      <div className="chat-bubble">{message.content}</div>
+      <div className="chat-bubble">{message!.content}</div>
       <div className="chat-footer opacity-50">Delivered</div>
     </div>
   );

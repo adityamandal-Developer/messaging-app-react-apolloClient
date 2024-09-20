@@ -79,6 +79,7 @@ query Chat($_id: String!) {
 mutation CreateMessage($createMessageinput: CreateMessageInput!) {
   createMessage(createMessageinput: $createMessageinput) {
     _id
+    chatId
     content
     createdAt
     userId
@@ -89,6 +90,16 @@ mutation CreateMessage($createMessageinput: CreateMessageInput!) {
 query Messages($chatId: String!) {
   messages(chatId: $chatId) {
     _id
+    content
+    createdAt
+    userId
+  }
+}
+
+subscription MessageCreated($chatId: String!) {
+  messageCreated(chatId: $chatId) {
+    _id
+    chatId
     content
     createdAt
     userId

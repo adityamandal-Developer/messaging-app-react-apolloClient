@@ -1,6 +1,10 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import { useLocation, useParams } from "react-router-dom";
-import { ChatDocument, MessagesDocument } from "../../config/gql/generated";
+import {
+  ChatDocument,
+  MessageCreatedDocument,
+  MessagesDocument,
+} from "../../config/gql/generated";
 import {
   Box,
   Divider,
@@ -21,7 +25,10 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const divRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
-
+  const { data: latestMessage } = useSubscription(MessageCreatedDocument, {
+    variables: { chatId: _id! },
+  });
+  console.log(latestMessage);
   const scrollToBottom = () => divRef.current?.scrollIntoView();
 
   useEffect(() => {
@@ -73,9 +80,15 @@ const Chat = () => {
         {messageData?.messages.map((message) => (
           <>
             {message.userId !== user?.me._id ? (
-              <OtherPersonMessage message={message} key={message._id} />
+              <OtherPersonMessage
+                message={{ ...message, chatId: _id! }}
+                key={message._id}
+              />
             ) : (
-              <MyMessage message={message} key={message._id} />
+              <MyMessage
+                message={{ ...message, chatId: _id! }}
+                key={message._id}
+              />
             )}
           </>
         ))}
