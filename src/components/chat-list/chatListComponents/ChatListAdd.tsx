@@ -2,14 +2,8 @@ import Search from "@mui/icons-material/Search";
 import {
   Box,
   Button,
-  FormControlLabel,
-  FormGroup,
-  IconButton,
-  InputBase,
   Modal,
-  Paper,
   Stack,
-  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -24,15 +18,14 @@ interface CHAT_LIST_PROPS {
 }
 
 const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [error, setError] = useState("");
-  const [createChat] = useCreateChat();
+  const { createChat, mutationResult } = useCreateChat();
+  const { loading, error: createChatError, data } = mutationResult;
 
   const onClose = () => {
     setError("");
     setName("");
-    setIsPrivate(false);
     handleClose();
   };
   return (
@@ -53,35 +46,15 @@ const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
           <Typography variant="h6" component="h2">
             Add Chat
           </Typography>
-          <FormGroup>
-            <FormControlLabel
-              style={{ width: 0 }}
-              control={
-                <Switch
-                  defaultChecked={isPrivate}
-                  value={isPrivate}
-                  onChange={(e) => setIsPrivate(e?.target.checked)}
-                />
-              }
-              label="Private"
-            />
-          </FormGroup>
-          {isPrivate ? (
-            <Paper sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
-              <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search Users" />
-              <IconButton>
-                <Search />
-              </IconButton>
-            </Paper>
-          ) : (
-            <TextField
-              label="Name"
-              required
-              error={!!error}
-              helperText={error}
-              onChange={(e) => setName(e.target.value)}
-            />
-          )}
+
+          <TextField
+            label="Name"
+            required
+            error={!!error}
+            helperText={error}
+            onChange={(e) => setName(e.target.value)}
+          />
+
           <Button
             variant="outlined"
             onClick={async () => {
@@ -93,7 +66,7 @@ const ChatListAdd = ({ open, handleClose }: CHAT_LIST_PROPS) => {
               try {
                 const chat = await createChat({
                   variables: {
-                    createChatInput: { isPrivate, name: name || undefined },
+                    createChatInput: { name },
                   },
                 });
                 onClose();

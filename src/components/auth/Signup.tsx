@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Link as MUILink } from "@mui/material";
+import { Link as MUILink, TextField } from "@mui/material";
 import Auth from "./Auth";
 import { CreateUserDocument } from "../../config/gql/generated";
 import { useMutation } from "@apollo/client";
@@ -9,12 +9,24 @@ import { useLogin } from "../../hooks/userLogin";
 
 const Signup = () => {
   const [CreateUser] = useMutation(CreateUserDocument);
+  const [username, setUserName] = useState("");
   const [error, setError] = useState<string>();
   const { login } = useLogin();
   return (
     <Auth
       submitLabel="Signup"
       error={error}
+      extraFields={[
+        <TextField
+          type="text"
+          label="UserName"
+          variant="outlined"
+          value={username}
+          onChange={(event) => setUserName(event.target.value)}
+          error={!!error}
+          helperText={error}
+        />,
+      ]}
       onSubmit={async ({ email, password }) => {
         try {
           await CreateUser({
@@ -22,6 +34,7 @@ const Signup = () => {
               createUserInput: {
                 email,
                 password,
+                username,
               },
             },
           });

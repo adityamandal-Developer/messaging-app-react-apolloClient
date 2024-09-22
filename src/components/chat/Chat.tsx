@@ -30,9 +30,7 @@ const Chat = () => {
 
   const scrollToBottom = () => divRef.current?.scrollIntoView();
 
-  const { data, loading, error } = useQuery(ChatDocument, {
-    variables: { _id: _id! },
-  });
+  const { data, loading, error } = useQuery(ChatDocument, {});
   const { data: messageData } = useQuery(MessagesDocument, {
     variables: { chatId: _id! },
   });
@@ -53,8 +51,10 @@ const Chat = () => {
   useEffect(() => {
     if (
       latestMessage?.messageCreated &&
-      latestMessage.messageCreated._id !==
-        messageData?.messages[messageData?.messages.length - 1]._id
+      (!messageData?.messages || // Handles case when there are no previous messages
+        messageData?.messages?.length === 0 || // New chat room, no messages yet
+        latestMessage.messageCreated._id !==
+          messageData?.messages?.[messageData.messages.length - 1]?._id) // Ensures not to append duplicate messages
     ) {
       setCurrentMessage((prev) => [...prev, latestMessage.messageCreated]);
     }
@@ -96,20 +96,23 @@ const Chat = () => {
           msOverflowStyle: "none",
         }}
       >
-        {[...(currentMessage || [])]
-          ?.sort(
-            (a, b) =>
-              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          )
-          .map((message) => (
-            <React.Fragment key={message._id}>
-              {message.userId !== user?.me._id ? (
-                <OtherPersonMessage message={message} key={message._id} />
-              ) : (
-                <MyMessage message={message} key={message._id} />
-              )}
-            </React.Fragment>
-          ))}
+        {currentMessage.length > 0 &&
+          [...(currentMessage || [])]
+            .sort(
+              (a, b) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+            )
+            .map((message) => (
+              <React.Fragment key={message._id}>
+                {message.user._id !== user?.me._id ? (
+                  <OtherPersonMessage message={message} />
+                ) : (
+                  <MyMessage message={message} />
+                )}
+              </React.Fragment>
+            ))}
+
         <div ref={divRef}></div>
       </Box>
       <Paper

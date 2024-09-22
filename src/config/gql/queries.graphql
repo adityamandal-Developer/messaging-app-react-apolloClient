@@ -3,14 +3,16 @@ mutation CreateUser($createUserInput: CreateUserInput!) {
   createUser(createUserInput: $createUserInput) {
     _id
     email
-    name
+    username
   }
 }
+
 # update user
 mutation UpdateUser($updateUserInput: UpdateUserInput!) {
   updateUser(updateUserInput: $updateUserInput) {
     _id
     email
+    username
   }
 }
 # Query users
@@ -18,7 +20,7 @@ query Users {
   users {
     _id
     email
-    name
+    username
   }
 }
 
@@ -27,7 +29,7 @@ query User($id: String!) {
   user(_id: $id) {
     _id
     email
-    name
+    username
   }
 }
 
@@ -36,7 +38,7 @@ query Me {
   me {
     _id
     email
-    name
+    username
   }
 }
 
@@ -46,10 +48,18 @@ query Me {
 mutation CreateChat($createChatInput: CreateChatInput!) {
   createChat(createChatInput: $createChatInput) {
     _id
-    isPrivate
+    latestMessage {
+      _id
+      chatId
+      content
+      createdAt
+      user {
+        _id
+        email
+        username
+      }
+    }
     name
-    userId
-    userIds
   }
 }
 
@@ -57,21 +67,36 @@ mutation CreateChat($createChatInput: CreateChatInput!) {
 query Chats {
   chats {
     _id
-    isPrivate
+    latestMessage {
+      _id
+      chatId
+      content
+      createdAt
+      user {
+        _id
+        email
+        username
+      }
+    }
     name
-    userId
-    userIds
   }
 }
-
 #get single chat
-query Chat($_id: String!) {
-  chat(_id: $_id) {
+query Chat($id: String!) {
+  chat(_id: $id) {
     _id
-    isPrivate
+    latestMessage {
+      _id
+      chatId
+      content
+      createdAt
+      user {
+        _id
+        email
+        username
+      }
+    }
     name
-    userId
-    userIds
   }
 }
 
@@ -82,7 +107,11 @@ mutation CreateMessage($createMessageinput: CreateMessageInput!) {
     chatId
     content
     createdAt
-    userId
+    user {
+      _id
+      email
+      username
+    }
   }
 }
 
@@ -90,10 +119,14 @@ mutation CreateMessage($createMessageinput: CreateMessageInput!) {
 query Messages($chatId: String!) {
   messages(chatId: $chatId) {
     _id
+    chatId
     content
     createdAt
-    userId
-    chatId
+    user {
+      _id
+      email
+      username
+    }
   }
 }
 
@@ -103,6 +136,10 @@ subscription MessageCreated($chatId: String!) {
     chatId
     content
     createdAt
-    userId
+    user {
+      _id
+      email
+      username
+    }
   }
 }

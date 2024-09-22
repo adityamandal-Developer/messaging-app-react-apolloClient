@@ -2,30 +2,28 @@ import { useMutation } from "@apollo/client";
 import { ChatsDocument, CreateChatDocument } from "../config/gql/generated";
 
 const useCreateChat = () => {
-  const createChat = useMutation(CreateChatDocument, {
+  const [createChat, mutationResult] = useMutation(CreateChatDocument, {
     update(cache, { data }) {
       if (!data) return;
 
-      //existing chats
-      const existingChats = cache.readQuery({
+      const existingChats = cache.readQuery<{ chats: any[] }>({
         query: ChatsDocument,
       });
 
-      // Create a new chat
+      const chats = existingChats?.chats || [];
       const newChat = data.createChat;
 
-      // Update the cache with the new chat
       cache.writeQuery({
         query: ChatsDocument,
         data: {
-          chats: [...existingChats!.chats, newChat],
+          chats: [...chats, newChat],
         },
       });
     },
   });
-  return createChat;
+
+  // Return both the mutation function and the result separately
+  return { createChat, mutationResult };
 };
+
 export { useCreateChat };
-// const [createChat] = useMutation(CreateChatDocument, {
-//   refetchQueries: ["Chats"],
-// });
